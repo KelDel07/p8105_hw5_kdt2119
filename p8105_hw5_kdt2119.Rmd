@@ -157,3 +157,34 @@ hw5data_ %>%
 ```
 
 The charts above show observations over time as delineated by study arm. It can be noted that subjects in the control arm appear to report largely the same observation over time while subjects in the experimental arm appear to report a higher number of observations as time goes on. 
+
+
+## Question 3
+
+
+The code chunk below loads the iris dataset from the tidyverse package and introduces some missing values in each column. The purpose of this problem is to fill in those missing values. For numeric variables, you should fill in missing values with the mean of non-missing values. For character variables, you should fill in missing values with "virginica". Write a function that takes a vector as an argument; replaces missing values using the rules defined above; and returns the resulting vector. Apply this function to the columns of iris_with_missing using a map statement.
+
+```{r}
+
+#To load the iris dataset for purposes of exploration:
+
+set.seed(10)
+iris_with_missing = iris %>% 
+  map_df(~replace(.x, sample(1:150, 20), NA)) %>%
+  mutate(Species = as.character(Species))
+
+#The function below replaces the NA's in the dataset
+
+jf_iris = function(x) {
+   if (is.numeric(x)) { 
+   replace_na(x, mean(x, na.rm = TRUE))
+   }
+   else if (is.character(x)) 
+     {replace_na(x, "virginica")}
+}
+iris_completed = map(iris_with_missing, jf_iris)
+
+#To have a final look to rule out any remaining NA's in the dataset
+
+is.na(iris_completed)
+```
